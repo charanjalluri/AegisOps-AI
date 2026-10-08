@@ -9,10 +9,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Infrastructure & Event Backbone (INFRA)
 
-- [ ] **INFRA-01**: Single-command Docker Compose stack (`PostgreSQL` with dual `aegisops_db`/`demo_payment_db`, `Kafka`, `Kafka UI`, `Qdrant`, `Prometheus`, `Grafana`, `n8n`, `API`, `Agent`, `Dashboard`).
-- [ ] **INFRA-02**: Event streaming backbone configured with dedicated Kafka topics (`logs.raw`, `metrics.raw`, `alerts.raw`, `deployments.events`, `incidents.created`, `incidents.updated`, `ai.analysis`, `ai.actions`).
-- [ ] **INFRA-03**: Developer automation tooling (`Makefile` / CLI scripts: `make setup`, `make up`, `make down`, `make demo`, `make reset-demo`, `make seed`).
-- [ ] **INFRA-04**: System readiness and health check endpoints (`GET /health`, `GET /ready`) verifying connectivity across PostgreSQL, Kafka, Qdrant, MCP, and agent services.
+- [x] **INFRA-01**: Single-command Docker Compose stack (`PostgreSQL` with dual `aegisops_db`/`demo_payment_db`, `Kafka`, `Kafka UI`, `Qdrant`, `Prometheus`, `Grafana`, `n8n`, `API`, `Agent`, `Dashboard`).
+- [x] **INFRA-02**: Event streaming backbone configured with dedicated Kafka topics (`logs.raw`, `metrics.raw`, `alerts.raw`, `deployments.events`, `incidents.created`, `incidents.updated`, `ai.analysis`, `ai.actions`).
+- [x] **INFRA-03**: Developer automation tooling (`Makefile` / CLI scripts: `make setup`, `make up`, `make down`, `make demo`, `make reset-demo`, `make seed`).
+- [x] **INFRA-04**: System readiness and health check endpoints (`GET /health`, `GET /ready`) verifying connectivity across PostgreSQL, Kafka, Qdrant, MCP, and agent services.
 
 ### Deterministic Incident Detection (DETECT)
 
@@ -53,7 +53,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Target Simulation & Evaluation Framework (DEMO)
 
-- [ ] **DEMO-01**: Fictional microservice simulator (`payment-service`) emitting realistic logs, metrics, DB connection traffic, and failure events.
+- [x] **DEMO-01**: Fictional microservice simulator (`payment-service`) emitting realistic logs, metrics, DB connection traffic, and failure events.
 - [ ] **DEMO-02**: Declarative incident scenario runner executing `demo/scenarios/database-connection-leak.yaml` (v2.8.1 deployment triggering pool exhaustion and 500 spikes).
 - [ ] **DEMO-03**: Additional ground-truth scenario library (bad-deployment, memory-leak, slow-query, service-dependency-failure).
 - [ ] **DEMO-04**: AI evaluation benchmarking suite (`make evaluate`) measuring RCA accuracy, tool selection precision, hallucination rate, and verification reliability.
@@ -96,11 +96,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INFRA-01 | Phase 1 | Pending |
-| INFRA-02 | Phase 1 | Pending |
-| INFRA-03 | Phase 1 | Pending |
-| INFRA-04 | Phase 1 | Pending |
-| DEMO-01 | Phase 1 | Pending |
+| INFRA-01 | Phase 1 | Complete |
+| INFRA-02 | Phase 1 | Complete |
+| INFRA-03 | Phase 1 | Complete |
+| INFRA-04 | Phase 1 | Complete |
+| DEMO-01 | Phase 1 | Complete |
 | DETECT-01 | Phase 2 | Pending |
 | DETECT-02 | Phase 2 | Pending |
 | DETECT-03 | Phase 2 | Pending |

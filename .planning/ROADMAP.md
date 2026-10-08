@@ -6,7 +6,7 @@ AegisOps AI is built as a complete evidence-driven incident intelligence and aut
 
 ## Phases
 
-- [ ] **Phase 1: Local Containerized Infrastructure & Event Backbone** - Single-command Docker Compose stack, Kafka event topics, health probes, and simulated microservice
+- [x] **Phase 1: Local Containerized Infrastructure & Event Backbone** - Single-command Docker Compose stack, Kafka event topics, health probes, and simulated microservice
 - [ ] **Phase 2: Telemetry Ingestion, Deterministic Detection & Logs MCP** - Kafka consumer pipeline, threshold-based incident creation, and structured Logs MCP server
 - [ ] **Phase 3: Investigation Tooling Suite (Database, GitHub & Incident MCPs)** - Read-only Database MCP, GitHub code changes MCP, Incident state MCP, and short-term PostgreSQL storage
 - [ ] **Phase 4: LangGraph Investigation Agent, Evidence Engine & Semantic RAG** - Cyclic investigation state machine, evidence normalization, multi-hypothesis scoring, and Qdrant memory
@@ -30,9 +30,9 @@ AegisOps AI is built as a complete evidence-driven incident intelligence and aut
 **Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: Containerized infrastructure topology (docker-compose, PostgreSQL schemas, Qdrant, Kafka UI, Prometheus, n8n)
-- [ ] 01-02: Kafka event bus setup, topic initialization, and shared event schema definitions
-- [ ] 01-03: Fictional microservice simulator (`payment-service` baseline v2.8.0), health/readiness endpoints, and developer Makefile
+- [x] 01-01: Containerized infrastructure topology (docker-compose, PostgreSQL schemas, Qdrant, Kafka UI, Prometheus, n8n)
+- [x] 01-02: Kafka event bus setup, topic initialization, and shared event schema definitions
+- [x] 01-03: Fictional microservice simulator (`payment-service` baseline v2.8.0), health/readiness endpoints, and developer Makefile
 
 ### Phase 2: Telemetry Ingestion, Deterministic Detection & Logs MCP
 **Goal**: Stream operational telemetry through Kafka, detect anomalies deterministically to trigger incidents, and provide structured log introspection via Logs MCP.
@@ -147,7 +147,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Local Containerized Infrastructure & Event Backbone | 0/3 | Not started | - |
+| 1. Local Containerized Infrastructure & Event Backbone | 3/3 | Complete | 2026-10-08 |
 | 2. Telemetry Ingestion, Deterministic Detection & Logs MCP | 0/3 | Not started | - |
 | 3. Investigation Tooling Suite (Database, GitHub & Incident MCPs) | 0/3 | Not started | - |
 | 4. LangGraph Investigation Agent, Evidence Engine & Semantic RAG | 0/3 | Not started | - |

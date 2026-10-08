@@ -1,9 +1,9 @@
 ---
 phase: "1"
 slug: "local-containerized-infrastructure-event-backbone"
-status: draft
+status: validated
 nyquist_compliant: true
-wave_0_complete: false
+wave_0_complete: true
 created: "2026-10-08"
 ---
 
@@ -39,14 +39,14 @@ created: "2026-10-08"
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| 01-01-01 | 01 | 1 | INFRA-01 | T-01-01 | Docker Compose defines pinned images and validates syntax | unit | `python tests/unit/test_compose_spec.py` | ❌ W0 | ⬜ pending |
-| 01-01-02 | 01 | 1 | INFRA-01 | T-01-02 | Postgres init script creates dual DBs with LF line endings | unit | `python tests/unit/test_postgres_script.py` | ❌ W0 | ⬜ pending |
-| 01-01-03 | 01 | 1 | INFRA-01 | T-01-03 | pyproject.toml and .env.example provide complete configurations | unit | `python tests/unit/test_env_and_config.py` | ❌ W0 | ⬜ pending |
-| 01-02-01 | 02 | 2 | INFRA-02 | T-01-04 | Kafka topic provisioner defines 8 operational topics idempotently | unit | `python tests/unit/test_kafka_spec.py` | ❌ W0 | ⬜ pending |
-| 01-02-02 | 02 | 2 | INFRA-02 | — | Pydantic event models validate telemetry schemas | unit | `pytest tests/unit/test_event_schemas.py -v` | ❌ W0 | ⬜ pending |
-| 01-03-01 | 03 | 3 | INFRA-04 | T-01-06 | FastAPI /health and /ready endpoints decouple hard vs soft deps | unit | `pytest tests/unit/test_health_probes.py -v` | ❌ W0 | ⬜ pending |
-| 01-03-02 | 03 | 3 | DEMO-01 | T-01-07 | payment-service simulator executes real HTTP & DB logic | unit | `pytest tests/unit/test_payment_simulator_unit.py -v` | ❌ W0 | ⬜ pending |
-| 01-03-03 | 03 | 3 | INFRA-03 | T-01-08 | Makefile defines setup, up, down, clean, reset-demo targets | unit | `python tests/unit/test_makefile_targets.py` | ❌ W0 | ⬜ pending |
+| 01-01-01 | 01 | 1 | INFRA-01 | T-01-01 | Docker Compose defines pinned images and validates syntax | unit | `python tests/unit/test_compose_spec.py` | ✅ Yes | ✅ green |
+| 01-01-02 | 01 | 1 | INFRA-01 | T-01-02 | Postgres init script creates dual DBs with LF line endings | unit | `python tests/unit/test_postgres_script.py` | ✅ Yes | ✅ green |
+| 01-01-03 | 01 | 1 | INFRA-01 | T-01-03 | pyproject.toml and .env.example provide complete configurations | unit | `python tests/unit/test_env_and_config.py` | ✅ Yes | ✅ green |
+| 01-02-01 | 02 | 2 | INFRA-02 | T-01-04 | Kafka topic provisioner defines 8 operational topics idempotently | unit | `python tests/unit/test_kafka_spec.py` | ✅ Yes | ✅ green |
+| 01-02-02 | 02 | 2 | INFRA-02 | — | Pydantic event models validate telemetry schemas | unit | `pytest tests/unit/test_event_schemas.py -v` | ✅ Yes | ✅ green |
+| 01-03-01 | 03 | 3 | INFRA-04 | T-01-06 | FastAPI /health and /ready endpoints decouple hard vs soft deps | unit | `pytest tests/unit/test_health_probes.py -v` | ✅ Yes | ✅ green |
+| 01-03-02 | 03 | 3 | DEMO-01 | T-01-07 | payment-service simulator executes real HTTP & DB logic | unit | `pytest tests/unit/test_payment_simulator_unit.py -v` | ✅ Yes | ✅ green |
+| 01-03-03 | 03 | 3 | INFRA-03 | T-01-08 | Makefile defines setup, up, down, clean, reset-demo targets | unit | `python tests/unit/test_makefile_targets.py` | ✅ Yes | ✅ green |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -54,14 +54,14 @@ created: "2026-10-08"
 
 ## Wave 0 Requirements
 
-- [ ] `tests/unit/test_compose_spec.py` — verifies pinned image tags, listener ports, volumes
-- [ ] `tests/unit/test_postgres_script.py` — verifies LF line endings and dual database creation
-- [ ] `tests/unit/test_env_and_config.py` — verifies environment configuration keys and types
-- [ ] `tests/unit/test_kafka_spec.py` — verifies topic names, partition count, and replication
-- [ ] `tests/unit/test_event_schemas.py` — tests serialization/deserialization across all 6 telemetry models
-- [ ] `tests/unit/test_health_probes.py` — tests `/health` and `/ready` with mocked dependencies
-- [ ] `tests/unit/test_payment_simulator_unit.py` — tests payment-service API routes and transaction models
-- [ ] `tests/unit/test_makefile_targets.py` — tests Makefile target existence and clean/reset targets
+- [x] `tests/unit/test_compose_spec.py` — verifies pinned image tags, listener ports, volumes
+- [x] `tests/unit/test_postgres_script.py` — verifies LF line endings and dual database creation
+- [x] `tests/unit/test_env_and_config.py` — verifies environment configuration keys and types
+- [x] `tests/unit/test_kafka_spec.py` — verifies topic names, partition count, and replication
+- [x] `tests/unit/test_event_schemas.py` — tests serialization/deserialization across all 6 telemetry models
+- [x] `tests/unit/test_health_probes.py` — tests `/health` and `/ready` with mocked dependencies
+- [x] `tests/unit/test_payment_simulator_unit.py` — tests payment-service API routes and transaction models
+- [x] `tests/unit/test_makefile_targets.py` — tests Makefile target existence and clean/reset targets
 
 ---
 
@@ -83,4 +83,4 @@ created: "2026-10-08"
 - [x] Feedback latency < 5s
 - [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** approved (Wave 0 and all Phase 1 test tasks verified green)
