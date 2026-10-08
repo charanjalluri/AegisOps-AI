@@ -17,20 +17,21 @@ created: "2026-10-08"
 
 | Property | Value |
 |----------|-------|
-| **Framework** | pytest 8.x / Docker Compose health checks |
+| **Framework** | pytest 9.x |
 | **Config file** | `pyproject.toml` |
-| **Quick run command** | `pytest tests/unit -v` |
-| **Full suite command** | `pytest tests/ -v` |
-| **Estimated runtime** | ~10 seconds |
+| **Offline unit tests** | `pytest tests/unit -v` |
+| **Docker integration tests** | `pytest tests/integration -v` (runs when containers are active) |
+| **Full suite command** | `pytest tests/unit -v` (default offline validation gate) |
+| **Estimated runtime** | ~3-5 seconds |
 
 ---
 
 ## Sampling Rate
 
-- **After every task commit:** Run `pytest tests/unit -v`
-- **After every plan wave:** Run `docker compose ps` & `pytest tests/ -v`
-- **Before `/gsd-verify-work`:** All containers healthy and readiness probe returns 200 OK
-- **Max feedback latency:** 15 seconds
+- **After every task commit:** Run `.venv\Scripts\pytest tests/unit -v`
+- **After every plan wave:** Run `.venv\Scripts\pytest tests/unit -v` and syntax/config validation
+- **Before `/gsd-verify-work`:** Unit test suite is 100% green; Docker configuration is valid
+- **Max feedback latency:** 5 seconds
 
 ---
 
@@ -38,13 +39,14 @@ created: "2026-10-08"
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| 01-01-01 | 01 | 1 | INFRA-01 | T-01-01 | Postgres dual DB init creates aegisops_db & demo_payment_db | integration | `pytest tests/integration/test_db_init.py` | ❌ W0 | ⬜ pending |
-| 01-01-02 | 01 | 1 | INFRA-01 | T-01-02 | Docker Compose boots with all healthy services | integration | `docker compose config` | ❌ W0 | ⬜ pending |
-| 01-02-01 | 02 | 2 | INFRA-02 | T-01-03 | Kafka topic init script idempotently creates all 8 topics | integration | `pytest tests/integration/test_kafka_topics.py` | ❌ W0 | ⬜ pending |
-| 01-02-02 | 02 | 2 | INFRA-02 | — | Event schema models validate telemetry payloads | unit | `pytest tests/unit/test_event_schemas.py` | ❌ W0 | ⬜ pending |
-| 01-03-01 | 03 | 3 | INFRA-04 | T-01-04 | GET /health and /ready return 200 with dependency statuses | integration | `pytest tests/integration/test_health_probes.py` | ❌ W0 | ⬜ pending |
-| 01-03-02 | 03 | 3 | DEMO-01 | — | payment-service baseline v2.8.0 emits healthy traffic to Kafka | integration | `pytest tests/integration/test_payment_simulator.py` | ❌ W0 | ⬜ pending |
-| 01-03-03 | 03 | 3 | INFRA-03 | — | Makefile targets (up, down, setup) execute cleanly | integration | `make setup` | ❌ W0 | ⬜ pending |
+| 01-01-01 | 01 | 1 | INFRA-01 | T-01-01 | Docker Compose defines pinned images and validates syntax | unit | `python tests/unit/test_compose_spec.py` | ❌ W0 | ⬜ pending |
+| 01-01-02 | 01 | 1 | INFRA-01 | T-01-02 | Postgres init script creates dual DBs with LF line endings | unit | `python tests/unit/test_postgres_script.py` | ❌ W0 | ⬜ pending |
+| 01-01-03 | 01 | 1 | INFRA-01 | T-01-03 | pyproject.toml and .env.example provide complete configurations | unit | `python tests/unit/test_env_and_config.py` | ❌ W0 | ⬜ pending |
+| 01-02-01 | 02 | 2 | INFRA-02 | T-01-04 | Kafka topic provisioner defines 8 operational topics idempotently | unit | `python tests/unit/test_kafka_spec.py` | ❌ W0 | ⬜ pending |
+| 01-02-02 | 02 | 2 | INFRA-02 | — | Pydantic event models validate telemetry schemas | unit | `pytest tests/unit/test_event_schemas.py -v` | ❌ W0 | ⬜ pending |
+| 01-03-01 | 03 | 3 | INFRA-04 | T-01-06 | FastAPI /health and /ready endpoints decouple hard vs soft deps | unit | `pytest tests/unit/test_health_probes.py -v` | ❌ W0 | ⬜ pending |
+| 01-03-02 | 03 | 3 | DEMO-01 | T-01-07 | payment-service simulator executes real HTTP & DB logic | unit | `pytest tests/unit/test_payment_simulator_unit.py -v` | ❌ W0 | ⬜ pending |
+| 01-03-03 | 03 | 3 | INFRA-03 | T-01-08 | Makefile defines setup, up, down, clean, reset-demo targets | unit | `python tests/unit/test_makefile_targets.py` | ❌ W0 | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -52,11 +54,14 @@ created: "2026-10-08"
 
 ## Wave 0 Requirements
 
-- [ ] `tests/conftest.py` — shared fixtures for Docker and Kafka connections
-- [ ] `tests/unit/test_event_schemas.py` — unit tests for telemetry models
-- [ ] `tests/integration/test_db_init.py` — DB connection & schema tests
-- [ ] `tests/integration/test_kafka_topics.py` — Kafka admin topic verification
-- [ ] `tests/integration/test_health_probes.py` — FastAPI probe endpoint tests
+- [ ] `tests/unit/test_compose_spec.py` — verifies pinned image tags, listener ports, volumes
+- [ ] `tests/unit/test_postgres_script.py` — verifies LF line endings and dual database creation
+- [ ] `tests/unit/test_env_and_config.py` — verifies environment configuration keys and types
+- [ ] `tests/unit/test_kafka_spec.py` — verifies topic names, partition count, and replication
+- [ ] `tests/unit/test_event_schemas.py` — tests serialization/deserialization across all 6 telemetry models
+- [ ] `tests/unit/test_health_probes.py` — tests `/health` and `/ready` with mocked dependencies
+- [ ] `tests/unit/test_payment_simulator_unit.py` — tests payment-service API routes and transaction models
+- [ ] `tests/unit/test_makefile_targets.py` — tests Makefile target existence and clean/reset targets
 
 ---
 
@@ -73,9 +78,9 @@ created: "2026-10-08"
 
 - [x] All tasks have `<automated>` verify or Wave 0 dependencies
 - [x] Sampling continuity: no 3 consecutive tasks without automated verify
-- [x] Wave 0 covers all MISSING references
+- [x] Wave 0 covers all unit tests
 - [x] No watch-mode flags
-- [x] Feedback latency < 15s
+- [x] Feedback latency < 5s
 - [x] `nyquist_compliant: true` set in frontmatter
 
 **Approval:** pending
