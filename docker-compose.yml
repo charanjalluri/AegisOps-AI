@@ -1,0 +1,166 @@
+services:
+  # ----------------------------------------------------------------------------
+  # PostgreSQL (Dual Database: aegisops_db & demo_payment_db)
+  # ----------------------------------------------------------------------------
+  postgres:
+    image: postgres:16.4-alpine
+    container_name: aegisops-postgres
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infrastructure/postgres/init-databases.sh:/docker-entrypoint-initdb.d/init-databases.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d aegisops_db && pg_isready -U postgres -d demo_payment_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    networks:
+      - aegisops_network
+
+  # ----------------------------------------------------------------------------
+  # Apache Kafka (KRaft mode: no Zookeeper required)
+  # ----------------------------------------------------------------------------
+  kafka:
+    image: apache/kafka:3.7.0
+    container_name: aegisops-kafka
+    ports:
+      - "29092:29092"
+      - "9092:9092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,EXTERNAL://0.0.0.0:29092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,EXTERNAL://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092 > /dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 15s
+    networks:
+      - aegisops_network
+
+  # ----------------------------------------------------------------------------
+  # Kafka UI (Web GUI for topic and message inspection)
+  # ----------------------------------------------------------------------------
+  kafka-ui:
+    image: provectuslabs/kafka-ui:v0.7.2
+    container_name: aegisops-kafka-ui
+    ports:
+      - "${KAFKA_UI_PORT:-8080}:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: aegisops-local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      DYNAMIC_CONFIG_ENABLED: "true"
+    depends_on:
+      kafka:
+        condition: service_healthy
+    networks:
+      - aegisops_network
+
+  # ----------------------------------------------------------------------------
+  # Qdrant Vector Database
+  # ----------------------------------------------------------------------------
+  qdrant:
+    image: qdrant/qdrant:v1.9.0
+    container_name: aegisops-qdrant
+    ports:
+      - "${QDRANT_PORT:-6333}:6333"
+      - "${QDRANT_GRPC_PORT:-6334}:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 2 bash -c '</dev/tcp/localhost/6333' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - aegisops_network
+
+  # ----------------------------------------------------------------------------
+  # Prometheus (Metrics Scraper & Time-Series Store)
+  # ----------------------------------------------------------------------------
+  prometheus:
+    image: prom/prometheus:v2.51.0
+    container_name: aegisops-prometheus
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+    volumes:
+      - ./infrastructure/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - aegisops_network
+
+  # ----------------------------------------------------------------------------
+  # Grafana (Metrics Visualizer & Dashboards)
+  # ----------------------------------------------------------------------------
+  grafana:
+    image: grafana/grafana:10.4.0
+    container_name: aegisops-grafana
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - aegisops_network
+
+  # ----------------------------------------------------------------------------
+  # n8n (External Workflow Automation)
+  # ----------------------------------------------------------------------------
+  n8n:
+    image: n8nio/n8n:1.36.0
+    container_name: aegisops-n8n
+    ports:
+      - "${N8N_PORT:-5678}:5678"
+    environment:
+      N8N_HOST: n8n
+      N8N_PORT: 5678
+      N8N_PROTOCOL: http
+      NODE_ENV: production
+      WEBHOOK_URL: http://localhost:5678/
+    volumes:
+      - n8n_data:/home/node/.n8n
+    networks:
+      - aegisops_network
+
+volumes:
+  postgres_data:
+    name: aegisops_postgres_data
+  kafka_data:
+    name: aegisops_kafka_data
+  qdrant_data:
+    name: aegisops_qdrant_data
+  prometheus_data:
+    name: aegisops_prometheus_data
+  grafana_data:
+    name: aegisops_grafana_data
+  n8n_data:
+    name: aegisops_n8n_data
+
+networks:
+  aegisops_network:
+    name: aegisops_network
+    driver: bridge
