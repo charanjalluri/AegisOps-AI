@@ -27,8 +27,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **MCP-03**: `Database MCP` server providing read-only diagnostics (`get_database_health`, `get_connection_pool`, `get_slow_queries`, `get_active_connections`, `run_readonly_query`).
 - [x] **MCP-04**: `GitHub MCP` server providing read-only change tracking (`get_recent_commits`, `get_commit`, `get_pull_requests`, `get_changed_files`, `get_deployment_history`).
 - [x] **MCP-05**: `Incident MCP` server for transactional lifecycle state management (`create_incident`, `update_incident`, `add_evidence`, `add_hypothesis`, `create_action_proposal`, `close_incident`).
-- [ ] **MCP-06**: `Deployment MCP` server with read inspection (`get_current_version`, `get_previous_version`, `get_deployment_history`) and policy-gated action execution (`rollback_deployment`, `restart_service`).
-- [ ] **MCP-07**: `n8n MCP` server providing workflow automation triggers (`execute_workflow`, `get_execution_status`) for Slack, Jira, email, and external notifications.
+- [x] **MCP-06**: `Deployment MCP` server with read inspection (`get_current_version`, `get_previous_version`, `get_deployment_history`) and policy-gated action execution (`rollback_deployment`, `restart_service`).
+- [x] **MCP-07**: `n8n MCP` server providing workflow automation triggers (`execute_workflow`, `get_execution_status`) for Slack, Jira, email, and external notifications.
 
 ### Evidence Engine & LangGraph Agent (REASON)
 
@@ -46,10 +46,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Policy Engine, HITL Guardrails & Verification (GOV)
 
-- [ ] **GOV-01**: Operation risk tiering classifying actions into `READ`, `LOW`, `MEDIUM`, `HIGH`, and `DESTRUCTIVE`.
-- [ ] **GOV-02**: Human-in-the-Loop (HITL) gate mandating structured proposals, risk rationale, and explicit approval before executing any `HIGH`-risk action (e.g. production rollback).
-- [ ] **GOV-03**: Automated post-remediation verification loop polling service telemetry after action execution to confirm error rate and metric recovery before incident closure.
-- [ ] **GOV-04**: Immutable audit logging recording all MCP requests, policy checks, approval decisions, and remediation executions.
+- [x] **GOV-01**: Operation risk tiering classifying actions into `READ`, `LOW`, `MEDIUM`, `HIGH`, and `DESTRUCTIVE`.
+- [x] **GOV-02**: Human-in-the-Loop (HITL) gate mandating structured proposals, risk rationale, and explicit approval before executing any `HIGH`-risk action (e.g. production rollback).
+- [x] **GOV-03**: Automated post-remediation verification loop polling service telemetry after action execution to confirm error rate and metric recovery before incident closure.
+- [x] **GOV-04**: Immutable audit logging recording all MCP requests, policy checks, approval decisions, and remediation executions.
 
 ### Target Simulation & Evaluation Framework (DEMO)
 
@@ -60,11 +60,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### React Operations Dashboard (UI)
 
-- [ ] **UI-01**: Overview & active incident triage dashboard displaying active incidents, severity badges, and status summaries.
-- [ ] **UI-02**: Incident detail investigation workbench featuring visual timeline, live evidence graph, and hypothesis confidence rankings.
-- [ ] **UI-03**: MCP tool inspector detailing each tool call, parameters, latency, and returned evidence data.
-- [ ] **UI-04**: Human approval interface card presenting proposed remediation, risk level, expected benefit, and interactive Approve/Reject actions.
-- [ ] **UI-05**: Platform health & observability panel monitoring Kafka topic lags, MCP server health, and agent performance metrics.
+- [x] **UI-01**: Overview & active incident triage dashboard displaying active incidents, severity badges, and status summaries.
+- [x] **UI-02**: Incident detail investigation workbench featuring visual timeline, live evidence graph, and hypothesis confidence rankings.
+- [x] **UI-03**: MCP tool inspector detailing each tool call, parameters, latency, and returned evidence data.
+- [x] **UI-04**: Human approval interface card presenting proposed remediation, risk level, expected benefit, and interactive Approve/Reject actions.
+- [x] **UI-05**: Platform health & observability panel monitoring Kafka topic lags, MCP server health, and agent performance metrics.
 
 ## v2 Requirements
 
@@ -117,20 +117,20 @@ Which phases cover which requirements. Updated during roadmap creation.
 | REASON-03 | Phase 4 | Complete |
 | REASON-04 | Phase 4 | Complete |
 | REASON-05 | Phase 4 | Complete |
-| MCP-06 | Phase 5 | Pending |
-| MCP-07 | Phase 5 | Pending |
-| GOV-01 | Phase 5 | Pending |
-| GOV-02 | Phase 5 | Pending |
-| GOV-03 | Phase 5 | Pending |
-| GOV-04 | Phase 5 | Pending |
-| UI-01 | Phase 6 | Pending |
-| UI-02 | Phase 6 | Pending |
-| UI-03 | Phase 6 | Pending |
-| UI-04 | Phase 6 | Pending |
-| UI-05 | Phase 6 | Pending |
-| DEMO-02 | Phase 7 | Pending |
-| DEMO-03 | Phase 7 | Pending |
-| DEMO-04 | Phase 7 | Pending |
+| MCP-06 | Phase 5 | Complete |
+| MCP-07 | Phase 5 | Complete |
+| GOV-01 | Phase 5 | Complete |
+| GOV-02 | Phase 5 | Complete |
+| GOV-03 | Phase 5 | Complete |
+| GOV-04 | Phase 5 | Complete |
+| UI-01 | Phase 6 | Complete |
+| UI-02 | Phase 6 | Complete |
+| UI-03 | Phase 6 | Complete |
+| UI-04 | Phase 6 | Complete |
+| UI-05 | Phase 6 | Complete |
+| DEMO-02 | Phase 7 | Complete |
+| DEMO-03 | Phase 7 | Complete |
+| DEMO-04 | Phase 7 | Complete |
 
 **Coverage:**
 - v1 requirements: 34 total

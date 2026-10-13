@@ -10,8 +10,8 @@ AegisOps AI is built as a complete evidence-driven incident intelligence and aut
 - [x] **Phase 2: Telemetry Ingestion, Deterministic Detection & Logs MCP** - Kafka consumer pipeline, threshold-based incident creation, and structured Logs MCP server
 - [x] **Phase 3: Investigation Tooling Suite (Database, GitHub & Incident MCPs)** - Read-only Database MCP, GitHub code changes MCP, Incident state MCP, and short-term PostgreSQL storage
 - [x] **Phase 4: LangGraph Investigation Agent, Evidence Engine & Semantic RAG** - Cyclic investigation state machine, evidence normalization, multi-hypothesis scoring, and Qdrant memory
-- [ ] **Phase 5: Policy Engine, Human Approval & Controlled Remediation Verification** - Risk classification, HITL proposal/approval gates, Deployment & n8n MCPs, and recovery verification
-- [ ] **Phase 6: React Operations Dashboard & Visual Incident Workbench** - Incident triage queue, investigation timeline, live evidence graph, tool inspector, and approval controls
+- [x] **Phase 5: Policy Engine, Human Approval & Controlled Remediation Verification** - Risk classification, HITL proposal/approval gates, Deployment & n8n MCPs, and recovery verification
+- [x] **Phase 6: React Operations Dashboard & Visual Incident Workbench** - Incident triage queue, investigation timeline, live evidence graph, tool inspector, and approval controls
 - [ ] **Phase 7: End-to-End Incident Scenarios, Evaluation Suite & Demo Packaging** - Ground-truth scenario library, automated AI evaluation benchmark, and reproducible demo scripts
 
 ## Phase Details
@@ -119,9 +119,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 06-01: React application shell, design system tokens, system health widgets, and active incident triage queue
-- [ ] 06-02: Incident detail view: investigation timeline, evidence graph, hypothesis confidence meters, and MCP inspector
-- [ ] 06-03: Interactive HITL approval card, action executor triggers, and post-remediation verification view
+- [x] 06-01: React application shell, design system tokens, system health widgets, and active incident triage queue
+- [x] 06-02: Incident detail view: investigation timeline, evidence graph, hypothesis confidence meters, and MCP inspector
+- [x] 06-03: Interactive HITL approval card, action executor triggers, and post-remediation verification view
 
 ### Phase 7: End-to-End Incident Scenarios, Evaluation Suite & Demo Packaging
 **Goal**: Package declarative incident scenarios, automated AI evaluation benchmarks, and reproducible demonstration scripts.
@@ -136,9 +136,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 07-01: Declarative incident scenario engine with `database-connection-leak.yaml` and failure injection triggers
-- [ ] 07-02: Multi-scenario benchmark library (bad-deployment, memory-leak, slow-query) and `make evaluate` runner
-- [ ] 07-03: End-to-end `make demo` / `make reset-demo` scripts, Prometheus/Grafana dashboards, and quickstart documentation
+- [x] 07-01: Declarative incident scenario engine with `database-connection-leak.yaml` and failure injection triggers
+- [x] 07-02: Multi-scenario benchmark library (bad-deployment, memory-leak, slow-query) and `make evaluate` runner
+- [x] 07-03: End-to-end `make demo` / `make reset-demo` scripts, Prometheus/Grafana dashboards, and quickstart documentation
 
 ## Progress
 
@@ -152,5 +152,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 3. Investigation Tooling Suite (Database, GitHub & Incident MCPs) | 3/3 | Complete | 2026-10-10 |
 | 4. LangGraph Investigation Agent, Evidence Engine & Semantic RAG | 3/3 | Complete | 2026-10-13 |
 | 5. Policy Engine, Human Approval & Controlled Remediation Verification | 3/3 | Complete | 2026-10-13 |
-| 6. React Operations Dashboard & Visual Incident Workbench | 0/3 | Not started | - |
-| 7. End-to-End Incident Scenarios, Evaluation Suite & Demo Packaging | 0/3 | Not started | - |
+| 6. React Operations Dashboard & Visual Incident Workbench | 3/3 | Complete | 2026-10-13 |
+| 7. End-to-End Incident Scenarios, Evaluation Suite & Demo Packaging | 3/3 | Complete | 2026-10-13 |
