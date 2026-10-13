@@ -16,33 +16,33 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Deterministic Incident Detection (DETECT)
 
-- [ ] **DETECT-01**: High-throughput telemetry ingestion consumer streaming logs, metrics, and deployment events from Kafka into structured operational tables.
-- [ ] **DETECT-02**: Deterministic rule-based detection engine monitoring latency anomalies, error rate thresholds, and database connection timeouts over sliding time windows.
-- [ ] **DETECT-03**: Automated incident generation publishing `incidents.created` events and persisting initial incident records to PostgreSQL.
+- [x] **DETECT-01**: High-throughput telemetry ingestion consumer streaming logs, metrics, and deployment events from Kafka into structured operational tables.
+- [x] **DETECT-02**: Deterministic rule-based detection engine monitoring latency anomalies, error rate thresholds, and database connection timeouts over sliding time windows.
+- [x] **DETECT-03**: Automated incident generation publishing `incidents.created` events and persisting initial incident records to PostgreSQL.
 
 ### Controlled MCP Server Suite (MCP)
 
-- [ ] **MCP-01**: Shared MCP core framework (`mcp_common`) providing standardized schemas, timeouts, error handling, rate limiting, and sanitized audit logging.
-- [ ] **MCP-02**: `Logs MCP` server with structured search (`search_logs`, `get_service_logs`, `get_error_rate`, `get_correlated_errors`, `get_logs_around_event`) enforcing pagination and token limits.
-- [ ] **MCP-03**: `Database MCP` server providing read-only diagnostics (`get_database_health`, `get_connection_pool`, `get_slow_queries`, `get_active_connections`, `run_readonly_query`).
-- [ ] **MCP-04**: `GitHub MCP` server providing read-only change tracking (`get_recent_commits`, `get_commit`, `get_pull_requests`, `get_changed_files`, `get_deployment_history`).
-- [ ] **MCP-05**: `Incident MCP` server for transactional lifecycle state management (`create_incident`, `update_incident`, `add_evidence`, `add_hypothesis`, `create_action_proposal`, `close_incident`).
+- [x] **MCP-01**: Shared MCP core framework (`mcp_common`) providing standardized schemas, timeouts, error handling, rate limiting, and sanitized audit logging.
+- [x] **MCP-02**: `Logs MCP` server with structured search (`search_logs`, `get_service_logs`, `get_error_rate`, `get_correlated_errors`, `get_logs_around_event`) enforcing pagination and token limits.
+- [x] **MCP-03**: `Database MCP` server providing read-only diagnostics (`get_database_health`, `get_connection_pool`, `get_slow_queries`, `get_active_connections`, `run_readonly_query`).
+- [x] **MCP-04**: `GitHub MCP` server providing read-only change tracking (`get_recent_commits`, `get_commit`, `get_pull_requests`, `get_changed_files`, `get_deployment_history`).
+- [x] **MCP-05**: `Incident MCP` server for transactional lifecycle state management (`create_incident`, `update_incident`, `add_evidence`, `add_hypothesis`, `create_action_proposal`, `close_incident`).
 - [ ] **MCP-06**: `Deployment MCP` server with read inspection (`get_current_version`, `get_previous_version`, `get_deployment_history`) and policy-gated action execution (`rollback_deployment`, `restart_service`).
 - [ ] **MCP-07**: `n8n MCP` server providing workflow automation triggers (`execute_workflow`, `get_execution_status`) for Slack, Jira, email, and external notifications.
 
 ### Evidence Engine & LangGraph Agent (REASON)
 
-- [ ] **REASON-01**: Evidence Engine normalizer converting heterogeneous MCP responses into canonical evidence objects with provenance timestamps and signal weights.
-- [ ] **REASON-02**: LangGraph cyclic state machine orchestrating the investigation flow (understand incident -> plan missing information -> select MCP tool -> evaluate evidence -> iterate).
-- [ ] **REASON-03**: Multi-hypothesis generation and confidence scoring distinguishing facts, hypotheses, assumptions, and alternative explanations.
-- [ ] **REASON-04**: Investigation budget enforcement capping maximum tool calls (limit 20), wall-clock execution time (5 minutes), and expensive queries.
-- [ ] **REASON-05**: Structured Root Cause Analysis (RCA) synthesis producing auditable findings, primary root cause, confidence score, and remediation recommendations.
+- [x] **REASON-01**: Evidence Engine normalizer converting heterogeneous MCP responses into canonical evidence objects with provenance timestamps and signal weights.
+- [x] **REASON-02**: LangGraph cyclic state machine orchestrating the investigation flow (understand incident -> plan missing information -> select MCP tool -> evaluate evidence -> iterate).
+- [x] **REASON-03**: Multi-hypothesis generation and confidence scoring distinguishing facts, hypotheses, assumptions, and alternative explanations.
+- [x] **REASON-04**: Investigation budget enforcement capping maximum tool calls (limit 20), wall-clock execution time (5 minutes), and expensive queries.
+- [x] **REASON-05**: Structured Root Cause Analysis (RCA) synthesis producing auditable findings, primary root cause, confidence score, and remediation recommendations.
 
 ### Dual Memory & Semantic RAG (MEM)
 
-- [ ] **MEM-01**: Short-term transactional memory storing active investigation state, tool executions, hypothesis transitions, and evidence chains in PostgreSQL.
-- [ ] **MEM-02**: Long-term semantic retrieval via Qdrant for historical incidents, postmortems, failure patterns, and operational runbooks.
-- [ ] **MEM-03**: Operational memory seeder (`scripts/seed-qdrant.py`) prepopulating Qdrant with 20–50 realistic historical incidents and troubleshooting guides.
+- [x] **MEM-01**: Short-term transactional memory storing active investigation state, tool executions, hypothesis transitions, and evidence chains in PostgreSQL.
+- [x] **MEM-02**: Long-term semantic retrieval via Qdrant for historical incidents, postmortems, failure patterns, and operational runbooks.
+- [x] **MEM-03**: Operational memory seeder (`scripts/seed-qdrant.py`) prepopulating Qdrant with 20–50 realistic historical incidents and troubleshooting guides.
 
 ### Policy Engine, HITL Guardrails & Verification (GOV)
 
@@ -101,22 +101,22 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INFRA-03 | Phase 1 | Complete |
 | INFRA-04 | Phase 1 | Complete |
 | DEMO-01 | Phase 1 | Complete |
-| DETECT-01 | Phase 2 | Pending |
-| DETECT-02 | Phase 2 | Pending |
-| DETECT-03 | Phase 2 | Pending |
-| MCP-01 | Phase 2 | Pending |
-| MCP-02 | Phase 2 | Pending |
-| MCP-03 | Phase 3 | Pending |
-| MCP-04 | Phase 3 | Pending |
-| MCP-05 | Phase 3 | Pending |
-| MEM-01 | Phase 3 | Pending |
-| MEM-02 | Phase 4 | Pending |
-| MEM-03 | Phase 4 | Pending |
-| REASON-01 | Phase 4 | Pending |
-| REASON-02 | Phase 4 | Pending |
-| REASON-03 | Phase 4 | Pending |
-| REASON-04 | Phase 4 | Pending |
-| REASON-05 | Phase 4 | Pending |
+| DETECT-01 | Phase 2 | Complete |
+| DETECT-02 | Phase 2 | Complete |
+| DETECT-03 | Phase 2 | Complete |
+| MCP-01 | Phase 2 | Complete |
+| MCP-02 | Phase 2 | Complete |
+| MCP-03 | Phase 3 | Complete |
+| MCP-04 | Phase 3 | Complete |
+| MCP-05 | Phase 3 | Complete |
+| MEM-01 | Phase 3 | Complete |
+| MEM-02 | Phase 4 | Complete |
+| MEM-03 | Phase 4 | Complete |
+| REASON-01 | Phase 4 | Complete |
+| REASON-02 | Phase 4 | Complete |
+| REASON-03 | Phase 4 | Complete |
+| REASON-04 | Phase 4 | Complete |
+| REASON-05 | Phase 4 | Complete |
 | MCP-06 | Phase 5 | Pending |
 | MCP-07 | Phase 5 | Pending |
 | GOV-01 | Phase 5 | Pending |

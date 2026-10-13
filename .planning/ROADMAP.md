@@ -7,9 +7,9 @@ AegisOps AI is built as a complete evidence-driven incident intelligence and aut
 ## Phases
 
 - [x] **Phase 1: Local Containerized Infrastructure & Event Backbone** - Single-command Docker Compose stack, Kafka event topics, health probes, and simulated microservice
-- [ ] **Phase 2: Telemetry Ingestion, Deterministic Detection & Logs MCP** - Kafka consumer pipeline, threshold-based incident creation, and structured Logs MCP server
-- [ ] **Phase 3: Investigation Tooling Suite (Database, GitHub & Incident MCPs)** - Read-only Database MCP, GitHub code changes MCP, Incident state MCP, and short-term PostgreSQL storage
-- [ ] **Phase 4: LangGraph Investigation Agent, Evidence Engine & Semantic RAG** - Cyclic investigation state machine, evidence normalization, multi-hypothesis scoring, and Qdrant memory
+- [x] **Phase 2: Telemetry Ingestion, Deterministic Detection & Logs MCP** - Kafka consumer pipeline, threshold-based incident creation, and structured Logs MCP server
+- [x] **Phase 3: Investigation Tooling Suite (Database, GitHub & Incident MCPs)** - Read-only Database MCP, GitHub code changes MCP, Incident state MCP, and short-term PostgreSQL storage
+- [x] **Phase 4: LangGraph Investigation Agent, Evidence Engine & Semantic RAG** - Cyclic investigation state machine, evidence normalization, multi-hypothesis scoring, and Qdrant memory
 - [ ] **Phase 5: Policy Engine, Human Approval & Controlled Remediation Verification** - Risk classification, HITL proposal/approval gates, Deployment & n8n MCPs, and recovery verification
 - [ ] **Phase 6: React Operations Dashboard & Visual Incident Workbench** - Incident triage queue, investigation timeline, live evidence graph, tool inspector, and approval controls
 - [ ] **Phase 7: End-to-End Incident Scenarios, Evaluation Suite & Demo Packaging** - Ground-truth scenario library, automated AI evaluation benchmark, and reproducible demo scripts
@@ -47,9 +47,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 02-01: Shared MCP framework (`mcp_common`) with schemas, timeouts, error contracts, and audit logging
-- [ ] 02-02: Telemetry ingestion consumer and sliding-window deterministic anomaly detector
-- [ ] 02-03: Logs MCP server implementation with structured search, error rate analytics, and log window extraction
+- [x] 02-01: Shared MCP framework (`mcp_common`) with schemas, timeouts, error contracts, and audit logging
+- [x] 02-02: Telemetry ingestion consumer and sliding-window deterministic anomaly detector
+- [x] 02-03: Logs MCP server implementation with structured search, error rate analytics, and log window extraction
 
 ### Phase 3: Investigation Tooling Suite (Database, GitHub & Incident MCPs)
 **Goal**: Deliver read-only database introspection, code change tracking, transactional incident state management, and short-term investigation persistence.
@@ -64,9 +64,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: Read-only Database MCP server connecting to `demo_payment_db` with query parsing & mutation rejection
-- [ ] 03-02: GitHub MCP server with local mock repository data provider and change inspection tools
-- [ ] 03-03: Incident MCP server and PostgreSQL short-term transactional investigation state model
+- [x] 03-01: Read-only Database MCP server connecting to `demo_payment_db` with query parsing & mutation rejection
+- [x] 03-02: GitHub MCP server with local mock repository data provider and change inspection tools
+- [x] 03-03: Incident MCP server and PostgreSQL short-term transactional investigation state model
 
 ### Phase 4: LangGraph Investigation Agent, Evidence Engine & Semantic RAG
 **Goal**: Orchestrate autonomous incident investigation via LangGraph, normalize evidence, evaluate hypotheses with calibrated confidence, and retrieve historical knowledge from Qdrant.
@@ -82,9 +82,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 04-01: Qdrant semantic memory integration, vector schema, and historical incident seeding script
-- [ ] 04-02: Central Evidence Engine normalizer and multi-hypothesis confidence scoring algorithm
-- [ ] 04-03: LangGraph investigation state machine orchestrator, tool budget enforcement, and structured RCA synthesis
+- [x] 04-01: Qdrant semantic memory integration, vector schema, and historical incident seeding script
+- [x] 04-02: Central Evidence Engine normalizer and multi-hypothesis confidence scoring algorithm
+- [x] 04-03: LangGraph investigation state machine orchestrator, tool budget enforcement, and structured RCA synthesis
 
 ### Phase 5: Policy Engine, Human Approval & Controlled Remediation Verification
 **Goal**: Implement action risk classification, require human approval for high-risk actions, execute rollbacks safely via Deployment MCP & n8n MCP, and verify post-remediation recovery.
@@ -148,9 +148,9 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Local Containerized Infrastructure & Event Backbone | 3/3 | Complete | 2026-10-08 |
-| 2. Telemetry Ingestion, Deterministic Detection & Logs MCP | 0/3 | Not started | - |
-| 3. Investigation Tooling Suite (Database, GitHub & Incident MCPs) | 0/3 | Not started | - |
-| 4. LangGraph Investigation Agent, Evidence Engine & Semantic RAG | 0/3 | Not started | - |
+| 2. Telemetry Ingestion, Deterministic Detection & Logs MCP | 3/3 | Complete | 2026-10-10 |
+| 3. Investigation Tooling Suite (Database, GitHub & Incident MCPs) | 3/3 | Complete | 2026-10-10 |
+| 4. LangGraph Investigation Agent, Evidence Engine & Semantic RAG | 3/3 | Complete | 2026-10-13 |
 | 5. Policy Engine, Human Approval & Controlled Remediation Verification | 0/3 | Not started | - |
 | 6. React Operations Dashboard & Visual Incident Workbench | 0/3 | Not started | - |
 | 7. End-to-End Incident Scenarios, Evaluation Suite & Demo Packaging | 0/3 | Not started | - |
