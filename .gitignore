@@ -25,6 +25,18 @@ wheels/
 .installed.cfg
 *.egg
 
+# Node & Frontend
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+apps/dashboard/dist/
+apps/dashboard/node_modules/
+
+# Agent IDE workspace local artifacts
+.agent/
+
 # Virtual environments
 .venv/
 env/
@@ -46,6 +58,9 @@ qdrant_data/
 prometheus_data/
 grafana_data/
 n8n_data/
+
+# Logs
+*.log
 
 # IDE & OS
 .idea/
