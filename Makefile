@@ -2,7 +2,7 @@
 # AegisOps AI - Developer Makefile
 # ==============================================================================
 
-.PHONY: help setup up down clean logs test test-unit test-integration reset-demo ps
+.PHONY: help setup up down clean logs test test-unit test-integration reset-demo seed ps
 
 PYTHON := python
 VENV_PYTHON := .venv/bin/python
@@ -21,6 +21,7 @@ help:
 	@echo "  make test-unit        - Run offline unit tests"
 	@echo "  make test-integration - Run live Docker integration tests"
 	@echo "  make test             - Run unit tests"
+	@echo "  make seed             - Prepopulate Qdrant with historical operational incidents"
 	@echo "  make reset-demo       - Reset demo tables without destroying containers"
 
 setup:
@@ -51,3 +52,6 @@ test: test-unit
 
 reset-demo:
 	$(PYTHON) scripts/reset-demo.py
+
+seed:
+	$(PYTHON) scripts/seed_qdrant.py
