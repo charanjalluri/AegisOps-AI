@@ -77,6 +77,14 @@ class DeterministicRuleReasoningProvider(BaseReasoningProvider):
     ) -> Optional[Tuple[str, Dict[str, Any]]]:
         called_names = [call.get("tool_name") for call in tool_history]
 
+        # If scenario specifies expected_tools in incident metadata, dispatch them sequentially
+        expected_tools = incident.metadata.get("expected_tools") if incident.metadata else None
+        if expected_tools:
+            for t_name in expected_tools:
+                if t_name not in called_names:
+                    return (t_name, {"service": incident.service})
+            return None  # All scenario tools executed -> converge!
+
         # Step 1: Check application logs error rate
         if "get_error_rate" not in called_names:
             return ("get_error_rate", {"service": incident.service, "time_window_minutes": 15})

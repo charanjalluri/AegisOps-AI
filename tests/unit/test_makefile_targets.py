@@ -16,6 +16,8 @@ def test_makefile_exists_and_contains_targets():
         "logs:",
         "test-unit:",
         "test-integration:",
+        "demo:",
+        "evaluate:",
         "reset-demo:",
     ]
     for target in expected_targets:

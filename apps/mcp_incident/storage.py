@@ -153,6 +153,39 @@ class InvestigationStorage:
             )
             return IncidentDetail(**dict(row)) if row else None
 
+    async def list_incidents(
+        self,
+        status: Optional[str] = None,
+        severity: Optional[str] = None,
+        limit: int = 50,
+    ) -> List[IncidentDetail]:
+        """Lists incidents with optional status and severity filtering."""
+        limit = min(max(1, limit), 100)
+        if not self.pool:
+            results = []
+            for inc in self._incidents.values():
+                if status and inc.get("status") != status:
+                    continue
+                if severity and inc.get("severity") != severity:
+                    continue
+                results.append(IncidentDetail(**inc))
+            # Sort descending by created_at
+            results.sort(key=lambda x: x.created_at, reverse=True)
+            return results[:limit]
+
+        query = """
+            SELECT incident_id, title, service, severity, status, summary,
+                   created_at::text, updated_at::text, resolved_at::text
+            FROM incidents
+            WHERE ($1::text IS NULL OR status = $1)
+              AND ($2::text IS NULL OR severity = $2)
+            ORDER BY created_at DESC
+            LIMIT $3;
+        """
+        async with self.pool.acquire() as conn:
+            rows = await conn.fetch(query, status, severity, limit)
+            return [IncidentDetail(**dict(r)) for r in rows]
+
     # 2. Evidence
     async def add_evidence(
         self,
@@ -323,9 +356,10 @@ class InvestigationStorage:
         parameters: Dict[str, Any],
         risk_level: str = "HIGH",
         rationale: Optional[str] = None,
+        proposal_id: Optional[str] = None,
     ) -> ActionProposalItem:
         item = ActionProposalItem(
-            id=str(uuid4()),
+            id=proposal_id or str(uuid4()),
             incident_id=incident_id,
             action_type=action_type,
             parameters=parameters,
@@ -518,3 +552,73 @@ class InvestigationStorage:
                 if not row:
                     raise ValueError(f"Incident '{incident_id}' does not exist")
                 return IncidentDetail(**dict(row))
+
+    # 7. Tool Execution History
+    async def record_tool_call(
+        self,
+        incident_id: str,
+        tool_name: str,
+        duration_ms: float,
+        parameters: Optional[Dict[str, Any]] = None,
+        caller: str = "agent",
+        status: str = "success",
+        result_summary: Optional[str] = None,
+    ) -> ToolHistoryItem:
+        """Records an MCP tool execution record."""
+        now_iso = datetime.now(timezone.utc).isoformat()
+        item = ToolHistoryItem(
+            id=str(uuid4()),
+            incident_id=incident_id,
+            tool_name=tool_name,
+            caller=caller,
+            arguments=parameters or {},
+            duration_ms=duration_ms,
+            status=status,
+            result_summary=result_summary,
+            created_at=now_iso,
+        )
+        if not self.pool:
+            if incident_id not in self._tool_history:
+                self._tool_history[incident_id] = []
+            self._tool_history[incident_id].append(item)
+            return item
+
+        async with self.pool.acquire() as conn:
+            await conn.execute(
+                """
+                INSERT INTO tool_execution_history (id, incident_id, tool_name, caller, arguments, duration_ms, status, result_summary, created_at)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW());
+                """,
+                item.id,
+                item.incident_id,
+                item.tool_name,
+                item.caller,
+                json.dumps(item.arguments),
+                item.duration_ms,
+                item.status,
+                item.result_summary,
+            )
+            return item
+
+    async def get_tool_history(self, incident_id: str) -> List[ToolHistoryItem]:
+        """Returns chronological list of tool executions for an incident."""
+        if not self.pool:
+            return self._tool_history.get(incident_id, [])
+
+        async with self.pool.acquire() as conn:
+            rows = await conn.fetch(
+                """
+                SELECT id::text, incident_id, tool_name, caller, arguments, duration_ms, status, result_summary, created_at::text
+                FROM tool_execution_history
+                WHERE incident_id = $1
+                ORDER BY created_at ASC;
+                """,
+                incident_id,
+            )
+            items = []
+            for r in rows:
+                d = dict(r)
+                if isinstance(d.get("arguments"), str):
+                    d["arguments"] = json.loads(d["arguments"])
+                items.append(ToolHistoryItem(**d))
+            return items

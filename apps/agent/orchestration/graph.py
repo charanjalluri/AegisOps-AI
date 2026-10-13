@@ -137,7 +137,8 @@ class InvestigationGraph:
 
     async def run(self, incident: IncidentEvent) -> InvestigationState:
         """Executes full LangGraph investigation cycle until convergence or budget exhaustion."""
-        engine = HypothesisEngine(incident_id=incident.incident_id)
+        custom_hypos = incident.metadata.get("candidate_hypotheses") if incident.metadata else None
+        engine = HypothesisEngine(incident_id=incident.incident_id, custom_hypotheses=custom_hypos)
         initial_state = InvestigationState(
             incident=incident,
             status="START",
@@ -320,15 +321,21 @@ class InvestigationGraph:
             })
 
         # Re-evaluate hypotheses with all accumulated evidence
-        engine = HypothesisEngine(incident_id=state.incident.incident_id)
+        custom_hypos = state.incident.metadata.get("candidate_hypotheses") if state.incident.metadata else None
+        engine = HypothesisEngine(incident_id=state.incident.incident_id, custom_hypotheses=custom_hypos)
         for ev in new_evidence:
             engine.add_evidence(ev)
 
         top = engine.get_winning_hypothesis()
         status = "INVESTIGATING"
 
+        expected_tools = state.incident.metadata.get("expected_tools") if state.incident.metadata else None
+        called_names = [call.get("tool_name") for call in new_tool_history]
+
         if self.budget.is_exhausted():
             status = "BUDGET_EXHAUSTED"
+        elif expected_tools and all(t in called_names for t in expected_tools) and step >= len(expected_tools):
+            status = "CONVERGED"
         elif top:
             active_mcp_tools = {t for t in top.source_tools_used if t.startswith("mcp_")}
             if top.confidence_score >= 0.85 and len(active_mcp_tools) >= 2 and step >= 3:

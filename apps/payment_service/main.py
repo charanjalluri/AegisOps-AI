@@ -140,6 +140,34 @@ async def payment_health():
 async def payment_metrics() -> PaymentMetrics:
     return tracker.get_summary()
 
+
+@app.post("/simulate/version")
+async def simulate_version(req: Dict[str, Any]):
+    global VERSION
+    new_version = req.get("version", "v2.8.1")
+    VERSION = new_version
+    logger.info(f"[Simulation] Updated service version to {VERSION}")
+    return {"status": "updated", "version": VERSION}
+
+@app.post("/simulate/leak")
+async def simulate_leak(req: Dict[str, Any]):
+    active = int(req.get("active_connections", 50))
+    db.active_connections = active
+    logger.info(f"[Simulation] Set database active connections to {db.active_connections}")
+    return {"status": "simulated", "active_connections": db.active_connections}
+
+@app.post("/simulate/reset")
+async def simulate_reset():
+    global VERSION
+    VERSION = "v2.8.0"
+    db.active_connections = 2
+    tracker.failed = 0
+    tracker.total = 0
+    tracker.successful = 0
+    tracker.total_latency = 0.0
+    logger.info("[Simulation] Reset payment service simulator to nominal v2.8.0 baseline.")
+    return {"status": "reset", "version": VERSION, "active_connections": db.active_connections}
+
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PAYMENT_SERVICE_PORT", "8001"))

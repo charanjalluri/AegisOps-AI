@@ -1,0 +1,50 @@
+id: database-connection-leak
+name: Payment Service Database Connection Pool Saturation
+service: payment-service
+severity: SEV-1
+description: >
+  Release v2.8.1 introduces an unclosed database connection leak in the /payments handler.
+  Under continuous transaction processing, the connection pool reaches maximum capacity (50/50),
+  causing connection checkout timeouts, p95 latency spikes to 1850ms, and 28.4% 500 Internal Server Errors.
+
+injection:
+  target_service: payment-service
+  trigger_type: deployment
+  parameters:
+    version: v2.8.1
+    commit_sha: c4a1b2c
+    error_rate_pct: 28.4
+    latency_p95_ms: 1850.0
+    active_connections: 50
+    connection_leak_per_tx: 2
+    logs:
+      - "FATAL: connection pool exhausted (50/50 active connections)"
+      - "Timeout acquiring connection from pool after 3000ms"
+      - "POST /payments failed: 500 Internal Server Error (pool timeout)"
+
+ground_truth:
+  category: database_connection_leak
+  expected_root_cause_keywords:
+    - "connection pool"
+    - "leak"
+    - "exhaustion"
+    - "v2.8.1"
+  expected_tools:
+    - get_error_rate
+    - get_connection_pool
+    - get_deployment_history
+    - get_recent_commits
+  forbidden_tools:
+    - rollback_deployment
+  remediation:
+    action_type: rollback_deployment
+    target_version: v2.8.0
+    risk_level: HIGH
+    rationale: "Reverting payment-service to v2.8.0 immediately eliminates the database connection pool leak."
+  verification_targets:
+    - metric_name: error_rate
+      operator: "<"
+      threshold: 0.01
+    - metric_name: active_connections
+      operator: "<"
+      threshold: 15.0

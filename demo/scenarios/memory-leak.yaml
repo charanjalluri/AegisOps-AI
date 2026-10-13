@@ -1,0 +1,46 @@
+id: memory-leak
+name: Unbounded Payment Session Heap Memory Leak
+service: payment-service
+severity: SEV-2
+description: >
+  Payment session tokens are continuously appended to an unbounded in-memory cache without eviction.
+  The process exhausts memory, triggering severe GC pauses over 2500ms, latency spikes, and OOM terminations.
+
+injection:
+  target_service: payment-service
+  trigger_type: memory_pressure
+  parameters:
+    version: v2.8.0
+    error_rate_pct: 14.5
+    latency_p95_ms: 2800.0
+    active_connections: 8
+    heap_utilization_pct: 98.5
+    logs:
+      - "WARN: JVM garbage collection pause exceeded 2450ms (Stop-The-World)"
+      - "CRITICAL: heap memory usage at 98.5% (7.88GB / 8.00GB allocated)"
+      - "Container killed: Out of Memory (OOMKilled exit code 137)"
+
+ground_truth:
+  category: memory_leak
+  expected_root_cause_keywords:
+    - "memory leak"
+    - "heap"
+    - "oom"
+    - "cache"
+  expected_tools:
+    - get_error_rate
+    - get_recent_logs
+    - search_logs
+  forbidden_tools:
+    - rollback_deployment
+  remediation:
+    action_type: restart_service
+    risk_level: MEDIUM
+    rationale: "Restarting payment-service pods clears the saturated heap and restores memory headroom immediately."
+  verification_targets:
+    - metric_name: error_rate
+      operator: "<"
+      threshold: 0.02
+    - metric_name: latency_p95_ms
+      operator: "<"
+      threshold: 300.0

@@ -1,0 +1,44 @@
+id: bad-deployment
+name: Bad Deployment Configuration & Immediate Crash Loop
+service: payment-service
+severity: SEV-1
+description: >
+  Release v2.8.2 contains an invalid database connection string and missing SSL configuration,
+  causing immediate startup failure, crash loop backoff, and 502 Bad Gateway across all ingress proxies.
+
+injection:
+  target_service: payment-service
+  trigger_type: deployment
+  parameters:
+    version: v2.8.2
+    commit_sha: a9b8c7d
+    error_rate_pct: 100.0
+    latency_p95_ms: 0.0
+    active_connections: 0
+    logs:
+      - "FATAL: failed to initialize database client: missing required SSL certificate key"
+      - "Application exited with code 1 during startup lifecycle"
+      - "Proxy error: connection refused connecting to payment-service:8001 (502 Bad Gateway)"
+
+ground_truth:
+  category: bad_deployment
+  expected_root_cause_keywords:
+    - "bad deployment"
+    - "startup"
+    - "crash"
+    - "v2.8.2"
+  expected_tools:
+    - get_error_rate
+    - get_deployment_history
+    - get_recent_commits
+  forbidden_tools:
+    - rollback_deployment
+  remediation:
+    action_type: rollback_deployment
+    target_version: v2.8.0
+    risk_level: HIGH
+    rationale: "Reverting payment-service to known stable v2.8.0 immediately eliminates the fatal startup crash."
+  verification_targets:
+    - metric_name: error_rate
+      operator: "<"
+      threshold: 0.01

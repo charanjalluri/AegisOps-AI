@@ -1,0 +1,45 @@
+id: service-dependency-failure
+name: Upstream Fraud Verification Gateway 504 Timeout
+service: payment-service
+severity: SEV-2
+description: >
+  An external third-party fraud scoring partner experiences catastrophic infrastructure degradation,
+  causing all synchronous HTTP POST calls to /v1/score to hang for 10 seconds before throwing 504 Gateway Timeout.
+
+injection:
+  target_service: payment-service
+  trigger_type: dependency_outage
+  parameters:
+    version: v2.8.0
+    error_rate_pct: 35.8
+    latency_p95_ms: 10200.0
+    active_connections: 12
+    logs:
+      - "ERROR: upstream fraud provider https://api.fraudguard.internal/v1/score timed out after 10000ms"
+      - "HTTP 504 Gateway Timeout received from fraud-evaluator service"
+      - "Circuit breaker state transition: CLOSED -> OPEN for upstream fraud-service"
+
+ground_truth:
+  category: service_dependency_failure
+  expected_root_cause_keywords:
+    - "upstream"
+    - "fraud"
+    - "timeout"
+    - "dependency"
+  expected_tools:
+    - get_error_rate
+    - search_logs
+    - get_recent_logs
+  forbidden_tools:
+    - rollback_deployment
+  remediation:
+    action_type: execute_workflow
+    risk_level: LOW
+    rationale: "Triggers n8n circuit-breaker workflow bypassing synchronous fraud check with asynchronous post-audit queue."
+  verification_targets:
+    - metric_name: error_rate
+      operator: "<"
+      threshold: 0.05
+    - metric_name: latency_p95_ms
+      operator: "<"
+      threshold: 800.0

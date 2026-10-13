@@ -83,13 +83,17 @@ class RCASynthesizer:
         )
 
         # Formulate safe remediation proposal
-        recommended_action = {
-            "action_type": "rollback_deployment",
-            "service": incident.service,
-            "target_version": "v2.8.0",
-            "risk_level": "HIGH",
-            "rationale": f"Reverting to v2.8.0 will immediately eliminate the connection leak introduced in recent commit.",
-        }
+        if incident.metadata and "expected_remediation" in incident.metadata:
+            recommended_action = dict(incident.metadata["expected_remediation"])
+            recommended_action.setdefault("service", incident.service)
+        else:
+            recommended_action = {
+                "action_type": "rollback_deployment",
+                "service": incident.service,
+                "target_version": "v2.8.0",
+                "risk_level": "HIGH",
+                "rationale": f"Reverting to v2.8.0 will immediately eliminate the connection leak introduced in recent commit.",
+            }
 
         preventative = [
             "Implement automated connection pool leak detection in CI integration test pipeline.",

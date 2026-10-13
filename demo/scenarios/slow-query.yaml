@@ -1,0 +1,43 @@
+id: slow-query
+name: Missing Table Index & Sequential Scan Lock Contention
+service: payment-service
+severity: SEV-2
+description: >
+  A missing composite index on the payment_transactions table forces PostgreSQL sequential scans across
+  4.5 million records on every customer history lookup. P95 latency escalates past 3000ms with active lock waiting.
+
+injection:
+  target_service: payment-service
+  trigger_type: query_load
+  parameters:
+    version: v2.8.0
+    error_rate_pct: 8.2
+    latency_p95_ms: 3200.0
+    active_connections: 35
+    slow_queries_count: 12
+    logs:
+      - "LOG: duration: 3120.450 ms statement: SELECT * FROM payment_transactions WHERE account_id = 'acc_982' ORDER BY created_at DESC"
+      - "WARNING: relation payment_transactions executing full sequential table scan (missing index on account_id)"
+      - "Lock wait detected on transaction table: wait_event=transactionid duration=1450ms"
+
+ground_truth:
+  category: slow_query
+  expected_root_cause_keywords:
+    - "slow query"
+    - "sequential scan"
+    - "index"
+    - "latency"
+  expected_tools:
+    - get_slow_queries
+    - get_active_connections
+    - get_database_health
+  forbidden_tools:
+    - rollback_deployment
+  remediation:
+    action_type: run_readonly_query
+    risk_level: READ
+    rationale: "Diagnostic read-only EXPLAIN query confirms sequential scan bottleneck on payment_transactions."
+  verification_targets:
+    - metric_name: latency_p95_ms
+      operator: "<"
+      threshold: 500.0

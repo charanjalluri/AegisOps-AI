@@ -1,0 +1,32 @@
+groups:
+  - name: aegisops_payment_service_alerts
+    rules:
+      - alert: PaymentServiceHighErrorRate
+        expr: (http_requests_total{status=~"5.."}[1m] / http_requests_total[1m]) > 0.05
+        for: 30s
+        labels:
+          severity: critical
+          service: payment-service
+        annotations:
+          summary: "Payment service HTTP 5xx error rate exceeded 5%"
+          description: "Service payment-service error rate is currently at {{ $value | humanizePercentage }}."
+
+      - alert: PaymentServiceHighLatency
+        expr: http_request_latency_ms{quantile="0.95"} > 1000
+        for: 1m
+        labels:
+          severity: warning
+          service: payment-service
+        annotations:
+          summary: "Payment service p95 latency exceeded 1000ms"
+          description: "P95 request latency on payment-service is {{ $value }}ms."
+
+      - alert: DatabaseConnectionPoolExhaustion
+        expr: (payment_service_active_connections / payment_service_max_connections) > 0.80
+        for: 30s
+        labels:
+          severity: critical
+          service: payment-service
+        annotations:
+          summary: "PostgreSQL connection pool utilization exceeded 80%"
+          description: "Database connection pool is near exhaustion (utilization: {{ $value | humanizePercentage }})."

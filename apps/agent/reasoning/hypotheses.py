@@ -6,7 +6,7 @@ calculates Bayesian calibrated confidence scores, and prevents single-source ove
 
 from enum import Enum
 import math
-from typing import Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Set
 from uuid import uuid4
 from pydantic import BaseModel, Field
 
@@ -60,7 +60,7 @@ class HypothesisEngine:
         ),
     ]
 
-    def __init__(self, incident_id: str):
+    def __init__(self, incident_id: str, custom_hypotheses: Optional[List[Any]] = None):
         self.incident_id = incident_id
         self.hypotheses: Dict[str, EvaluatedHypothesis] = {}
         self.evidence_history: List[CanonicalEvidence] = []
@@ -68,10 +68,11 @@ class HypothesisEngine:
             "Network connectivity between microservices is functional unless gateway errors prove otherwise.",
             "Database server is operational unless connection refused errors are detected.",
         ]
-        self._initialize_default_hypotheses()
+        self._initialize_hypotheses(custom_hypotheses)
 
-    def _initialize_default_hypotheses(self):
-        for title, rationale, prior in self.DEFAULT_HYPOTHESES:
+    def _initialize_hypotheses(self, custom_hypotheses: Optional[List[Any]] = None):
+        items = custom_hypotheses or self.DEFAULT_HYPOTHESES
+        for title, rationale, prior in items:
             hypo_id = str(uuid4())
             self.hypotheses[hypo_id] = EvaluatedHypothesis(
                 id=hypo_id,
