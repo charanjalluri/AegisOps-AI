@@ -1,11 +1,11 @@
 ---
 phase: "5"
 slug: "policy-engine-human-approval-controlled-remediation-verification"
-status: planned
+status: complete
 nyquist_compliant: true
-wave_0_complete: false
+wave_0_complete: true
 created: "2026-10-13"
-validated: null
+validated: "2026-10-13"
 ---
 
 # Phase 5 — Validation Strategy & Execution Matrix
@@ -40,15 +40,15 @@ validated: null
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| 05-01-01 | 01 | 1 | GOV-01 | T-05-02 | RiskClassifier classifies operations into 5 tiers and rejects destructive operations | unit | `python -m pytest tests/unit/test_policy_risk_tiers.py -v` | ⬜ pending | ⬜ pending |
-| 05-01-02 | 01 | 1 | GOV-01, GOV-02 | T-05-01 | PolicyEngine allows READ/LOW actions and blocks unapproved HIGH-risk mutations | unit | `python -m pytest tests/unit/test_policy_engine.py -v` | ⬜ pending | ⬜ pending |
-| 05-01-03 | 01 | 1 | GOV-02, GOV-04 | T-05-03 | ApprovalManager requires operator ID and GovernanceAuditLogger creates immutable entries | unit | `python -m pytest tests/unit/test_hitl_approval.py -v` | ⬜ pending | ⬜ pending |
-| 05-02-01 | 02 | 2 | MCP-06 | T-05-01 | Deployment MCP inspects current version, previous version, and deployment history | unit | `python -m pytest tests/unit/test_deployment_mcp_tools.py -k "test_version or test_history" -v` | ⬜ pending | ⬜ pending |
-| 05-02-02 | 02 | 2 | MCP-06, GOV-02 | T-05-01 | Rollback execution validates proposal through PolicyEngine; rejects unapproved requests | unit | `python -m pytest tests/unit/test_deployment_mcp_tools.py tests/unit/test_deployment_mcp_server.py -v` | ⬜ pending | ⬜ pending |
-| 05-02-03 | 02 | 2 | MCP-07 | T-05-03 | n8n MCP dispatches notification workflows with seamless offline mock fallback | unit | `python -m pytest tests/unit/test_n8n_mcp_tools.py tests/unit/test_n8n_mcp_server.py -v` | ⬜ pending | ⬜ pending |
-| 05-03-01 | 03 | 3 | GOV-03 | T-05-04 | Telemetry verification models evaluate thresholds and record metric samples | unit | `python -m pytest tests/unit/test_remediation_verifier.py -k "test_condition or test_models" -v` | ⬜ pending | ⬜ pending |
-| 05-03-02 | 03 | 3 | GOV-03 | T-05-05 | RemediationVerifier polls error rate and connection pool with consecutive pass rules and timeout | unit | `python -m pytest tests/unit/test_remediation_verifier.py -v` | ⬜ pending | ⬜ pending |
-| 05-03-03 | 03 | 3 | GOV-03, GOV-04 | T-05-06 | IncidentClosurePipeline verifies metrics, updates proposal/incident, emits audit and n8n alerts | unit | `python -m pytest tests/unit/test_incident_closure_pipeline.py -v` | ⬜ pending | ⬜ pending |
+| 05-01-01 | 01 | 1 | GOV-01 | T-05-02 | RiskClassifier classifies operations into 5 tiers and rejects destructive operations | unit | `python -m pytest tests/unit/test_policy_risk_tiers.py -v` | ✅ yes | ✅ green |
+| 05-01-02 | 01 | 1 | GOV-01, GOV-02 | T-05-01 | PolicyEngine allows READ/LOW actions and blocks unapproved HIGH-risk mutations | unit | `python -m pytest tests/unit/test_policy_engine.py -v` | ✅ yes | ✅ green |
+| 05-01-03 | 01 | 1 | GOV-02, GOV-04 | T-05-03 | ApprovalManager requires operator ID and GovernanceAuditLogger creates immutable entries | unit | `python -m pytest tests/unit/test_hitl_approval.py -v` | ✅ yes | ✅ green |
+| 05-02-01 | 02 | 2 | MCP-06 | T-05-01 | Deployment MCP inspects current version, previous version, and deployment history | unit | `python -m pytest tests/unit/test_deployment_mcp_tools.py -k "test_version or test_history" -v` | ✅ yes | ✅ green |
+| 05-02-02 | 02 | 2 | MCP-06, GOV-02 | T-05-01 | Rollback execution validates proposal through PolicyEngine; rejects unapproved requests | unit | `python -m pytest tests/unit/test_deployment_mcp_tools.py tests/unit/test_deployment_mcp_server.py -v` | ✅ yes | ✅ green |
+| 05-02-03 | 02 | 2 | MCP-07 | T-05-03 | n8n MCP dispatches notification workflows with seamless offline mock fallback | unit | `python -m pytest tests/unit/test_n8n_mcp_tools.py tests/unit/test_n8n_mcp_server.py -v` | ✅ yes | ✅ green |
+| 05-03-01 | 03 | 3 | GOV-03 | T-05-04 | Telemetry verification models evaluate thresholds and record metric samples | unit | `python -m pytest tests/unit/test_remediation_verifier.py -k "test_condition or test_models" -v` | ✅ yes | ✅ green |
+| 05-03-02 | 03 | 3 | GOV-03 | T-05-05 | RemediationVerifier polls error rate and connection pool with consecutive pass rules and timeout | unit | `python -m pytest tests/unit/test_remediation_verifier.py -v` | ✅ yes | ✅ green |
+| 05-03-03 | 03 | 3 | GOV-03, GOV-04 | T-05-06 | IncidentClosurePipeline verifies metrics, updates proposal/incident, emits audit and n8n alerts | unit | `python -m pytest tests/unit/test_incident_closure_pipeline.py -v` | ✅ yes | ✅ green |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -56,15 +56,15 @@ validated: null
 
 ## Wave 0 Requirements Verification
 
-- [ ] `tests/unit/test_policy_risk_tiers.py` — Risk tier classification and destructive command detection
-- [ ] `tests/unit/test_policy_engine.py` — Policy authorization and unapproved rollback rejection
-- [ ] `tests/unit/test_hitl_approval.py` — Operator approval workflow and immutable audit log persistence
-- [ ] `tests/unit/test_deployment_mcp_tools.py` — Version inspection and policy-gated rollback tools
-- [ ] `tests/unit/test_deployment_mcp_server.py` — JSON-RPC 2.0 endpoints on port 8006
-- [ ] `tests/unit/test_n8n_mcp_tools.py` — Workflow triggers and offline mock execution
-- [ ] `tests/unit/test_n8n_mcp_server.py` — JSON-RPC 2.0 endpoints on port 8007
-- [ ] `tests/unit/test_remediation_verifier.py` — Telemetry polling loop and timeout guard
-- [ ] `tests/unit/test_incident_closure_pipeline.py` — End-to-end verified incident closure and alerting
+- [x] `tests/unit/test_policy_risk_tiers.py` — Risk tier classification and destructive command detection
+- [x] `tests/unit/test_policy_engine.py` — Policy authorization and unapproved rollback rejection
+- [x] `tests/unit/test_hitl_approval.py` — Operator approval workflow and immutable audit log persistence
+- [x] `tests/unit/test_deployment_mcp_tools.py` — Version inspection and policy-gated rollback tools
+- [x] `tests/unit/test_deployment_mcp_server.py` — JSON-RPC 2.0 endpoints on port 8006
+- [x] `tests/unit/test_n8n_mcp_tools.py` — Workflow triggers and offline mock execution
+- [x] `tests/unit/test_n8n_mcp_server.py` — JSON-RPC 2.0 endpoints on port 8007
+- [x] `tests/unit/test_remediation_verifier.py` — Telemetry polling loop and timeout guard
+- [x] `tests/unit/test_incident_closure_pipeline.py` — End-to-end verified incident closure and alerting
 
 ---
 

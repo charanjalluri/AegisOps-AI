@@ -101,9 +101,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 05-01: Policy Engine with risk tiers, action proposal contracts, and approval verification gates
-- [ ] 05-02: Deployment MCP (with gated rollback) and n8n MCP workflow trigger integrations
-- [ ] 05-03: Post-remediation metric verification loop and automated incident closure pipeline
+- [x] 05-01: Policy Engine with risk tiers, action proposal contracts, and approval verification gates
+- [x] 05-02: Deployment MCP (with gated rollback) and n8n MCP workflow trigger integrations
+- [x] 05-03: Post-remediation metric verification loop and automated incident closure pipeline
 
 ### Phase 6: React Operations Dashboard & Visual Incident Workbench
 **Goal**: Build a modern, responsive React operations dashboard providing real-time visibility into active incidents, investigation timelines, evidence graphs, tool inspector, approvals, and system health.
@@ -151,6 +151,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 2. Telemetry Ingestion, Deterministic Detection & Logs MCP | 3/3 | Complete | 2026-10-10 |
 | 3. Investigation Tooling Suite (Database, GitHub & Incident MCPs) | 3/3 | Complete | 2026-10-10 |
 | 4. LangGraph Investigation Agent, Evidence Engine & Semantic RAG | 3/3 | Complete | 2026-10-13 |
-| 5. Policy Engine, Human Approval & Controlled Remediation Verification | 0/3 | Not started | - |
+| 5. Policy Engine, Human Approval & Controlled Remediation Verification | 3/3 | Complete | 2026-10-13 |
 | 6. React Operations Dashboard & Visual Incident Workbench | 0/3 | Not started | - |
 | 7. End-to-End Incident Scenarios, Evaluation Suite & Demo Packaging | 0/3 | Not started | - |
