@@ -16,6 +16,7 @@ from apps.common.mcp.protocol import (
     JSONRPCRequest,
     JSONRPCResponse,
     MCPErrorCode,
+    PolicyViolationError,
     ToolCallResult,
     ToolDefinition,
     ToolInputSchema,
@@ -244,9 +245,13 @@ class BaseMCPServer:
             status = "timeout"
             error_code = MCPErrorCode.TOOL_TIMEOUT
             raise TimeoutError(f"Tool '{name}' execution exceeded timeout of {tool.timeout_seconds}s")
+        except PolicyViolationError as pve:
+            status = "policy_violation"
+            error_code = MCPErrorCode.POLICY_VIOLATION
+            raise pve
         except Exception as e:
-            status = "error"
-            error_code = MCPErrorCode.INTERNAL_ERROR
+            status = "policy_violation" if "policy violation" in str(e).lower() else "error"
+            error_code = MCPErrorCode.POLICY_VIOLATION if "policy violation" in str(e).lower() else MCPErrorCode.INTERNAL_ERROR
             raise e
         finally:
             duration_ms = (time.time() - start_time) * 1000.0
@@ -325,7 +330,19 @@ class BaseMCPServer:
                     code=MCPErrorCode.RATE_LIMIT_EXCEEDED,
                     message=str(pe),
                 )
+            except PolicyViolationError as pve:
+                return JSONRPCResponse.failure(
+                    id=req.id,
+                    code=MCPErrorCode.POLICY_VIOLATION,
+                    message=str(pve),
+                )
             except Exception as ex:
+                if "policy violation" in str(ex).lower():
+                    return JSONRPCResponse.failure(
+                        id=req.id,
+                        code=MCPErrorCode.POLICY_VIOLATION,
+                        message=str(ex),
+                    )
                 return JSONRPCResponse.failure(
                     id=req.id,
                     code=MCPErrorCode.INTERNAL_ERROR,

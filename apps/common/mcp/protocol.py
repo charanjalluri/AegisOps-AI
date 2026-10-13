@@ -24,6 +24,14 @@ class MCPErrorCode(IntEnum):
     RESOURCE_NOT_FOUND = -32005
 
 
+class PolicyViolationError(Exception):
+    """Raised when an action violates safety policy (e.g. unapproved mutating action)."""
+
+    def __init__(self, message: str = "Policy violation: action rejected", error_code: int = MCPErrorCode.POLICY_VIOLATION):
+        super().__init__(message)
+        self.error_code = error_code
+
+
 class JSONRPCError(BaseModel):
     code: int
     message: str

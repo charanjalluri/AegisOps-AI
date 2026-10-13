@@ -55,3 +55,5 @@ class Sanitizer:
             return sanitized_str
 
         return data
+
+    mask_secrets = sanitize

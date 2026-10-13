@@ -4,6 +4,7 @@ AegisOps AI - Shared Model Context Protocol (MCP) Core Library
 
 from apps.common.mcp.protocol import (
     MCPErrorCode,
+    PolicyViolationError,
     JSONRPCError,
     JSONRPCRequest,
     JSONRPCResponse,
@@ -19,6 +20,7 @@ from apps.common.mcp.budget import TokenBudgetGuard
 
 __all__ = [
     "MCPErrorCode",
+    "PolicyViolationError",
     "JSONRPCError",
     "JSONRPCRequest",
     "JSONRPCResponse",
